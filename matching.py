@@ -1,3 +1,4 @@
+from itertools import product
 import random
 import networkx as nx  # https://networkx.org/documentation/stable/index.html
 
@@ -11,33 +12,23 @@ def matching(edges: list):
 def make_edges(hopes: list):
     # 公平になるように、処理の順番をランダムにしている
     # 処理の順番で結果がある程度決まるっぽい
-    order = [0,1,2,3,4,5]
-    random.shuffle(order)
-    print(f'debug: 処理順{order}\n')
+    random.shuffle(hopes)
 
     edges = list()
-    for i in order:
-        name, articles = hopes[i]
-        for rank,article in enumerate(articles):
-            edges += [ (name,f'{article}_{str(num+1)}',rank+1) for num in range(2)]
-            
+    for (name, articles) in hopes:
+        for ((rank, article), num) in product(enumerate(articles), [1,2]):
+            edges.append((name, f'{article}_{str(num)}', rank+1))
     return edges
 
-    
 def main():
-    hopes = list()
-    for _i in range(6):
-        # 入力
-        hopes.append((input(),(input(), input(), input())))
+    # 入力 (名前,(論文１,論文２,論文３))
+    hopes = [(input(),(input(), input(), input())) for i in range(6)]
 
     # グラフの辺を作成
     edges = make_edges(hopes)
 
     # マッチング
     result = matching(edges)
-
-    # 結果の並び替え（データの整形）
-    result = list(map(sorted, result))
 
     # 入力表示（左から希望が高い順）
     print('入力表示（左から希望が高い順）。あってますか？')
@@ -46,7 +37,7 @@ def main():
 
     # 結果表示
     print('\n結果')
-    for res in result:
+    for res in map(sorted, result):
         print(f'{res[1]} -> {res[0]}')
 
 if __name__ == '__main__':
