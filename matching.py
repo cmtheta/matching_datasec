@@ -15,7 +15,7 @@ def print_result(result: list):
     for res in map(sorted, result):
         print(f'{res[1]} -> {res[0]}')
         
-# 重み付き最小マッチングを行っている
+# 重み付き最小マッチングを行う
 def matching(edges: list):
     G = nx.Graph()
     G.add_weighted_edges_from(edges)
@@ -26,7 +26,7 @@ def make_edges(data: list):
     edges = list()
     for (name, articles) in data:
         for ((rank, article), num) in product(enumerate(articles), [1,2]):
-            edges.append((name, f'{article}_{str(num)}', rank+1))
+            edges.append((name, f'{article}_{str(num)}', rank))
     return edges
 
 def run(data: list):
@@ -45,7 +45,7 @@ def run(data: list):
 def main():
     # 入力 
     # n: 人数, m:対象（論文）の数
-    # (名前, [対象１,対象２, ... ])
+    # [(名前, [対象１,対象２, ... ])]
     n, m = map(int, input().split())
     data = [(input(), [input() for _ in range(m)]) for _ in range(n)]
 
